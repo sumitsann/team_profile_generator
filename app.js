@@ -3,57 +3,89 @@ const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const fs = require("fs");
-const htmlTemplate = require("./src/htmlTemplate");
+const generateHTML = require("./src/htmlTemplate");
+const path = require("path");
+
+const OUTPUT_DIR = path.resolve(__dirname, "output");
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 let projectMembers = [];
 let manager;
 let projectTitle;
 
-function managerInfo() {
-  inquirer
+const getManagerInfo = () => {
+  return inquirer
     .prompt([
       {
         type: "input",
-        message: "What is the name of this project?",
-        name: "projectTitle",
+        message: "What is the id of the manager?",
+        name: "managerID",
+        validate: (managerID) => {
+          if (managerID) {
+            return true;
+          } else {
+            console.log("Please enter the manager ID");
+            return false;
+          }
+        },
       },
       {
         type: "input",
         message: "What is the name of the manager?",
         name: "managerName",
-      },
-      {
-        type: "input",
-        message: "What is the id of the manager?",
-        name: "managerID",
+        validate: (managerName) => {
+          if (managerName) {
+            return true;
+          } else {
+            console.log("Please enter a name");
+            return false;
+          }
+        },
       },
       {
         type: "input",
         message: "What is the email of the manager?",
         name: "managerEmail",
+        validate: (managerEmail) => {
+          if (managerEmail) {
+            return true;
+          } else {
+            console.log("Please enter the email address");
+            return false;
+          }
+        },
       },
       {
         type: "input",
         message: "What is the phone number of the manager?",
         name: "managerPhone",
+        validate: (managerPhone) => {
+          if (managerPhone) {
+            return true;
+          } else {
+            console.log("Please enter the manager phone");
+            return false;
+          }
+        },
       },
     ])
-    .then((managerAns) => {
-      manager = new Manager(
-        managerAns.managerName,
-        managerAns.managerID,
-        managerAns.managerEmail,
-        managerAns.managerPhone
+    .then((answers) => {
+      console.log(answers);
+      const manager = new Manager(
+        answers.managerName,
+        answers.managerID,
+        answers.managerEmail,
+        answers.managerPhone
       );
-      projectTitle = managerAns.projectTitle;
+
       console.log("Lets get the info about the team members now.");
       projectMembers.push(manager);
 
-      teamMembersData();
+      promptTeamMembers();
     });
-}
-function teamMembersData() {
-  inquirer
+};
+const promptTeamMembers = () => {
+  return inquirer
     .prompt([
       {
         type: "list",
@@ -63,6 +95,17 @@ function teamMembersData() {
       },
     ])
     .then((teamAns) => {
+      switch (teamAns.employeeRole) {
+        case "Intern":
+          promptIntern();
+          break;
+        case "Engineer":
+          promptEngineer();
+          break;
+        default:
+          buildTeam();
+      }
+    });
       if (teamAns.employeeRole === "Intern") {
         return inquirer
           .prompt([
@@ -95,6 +138,7 @@ function teamMembersData() {
               internAns.internSchool
             );
             projectMembers.push(intern);
+
             teamMembersData();
           });
       } else if (teamAns.employeeRole === "Engineer") {
@@ -136,8 +180,15 @@ function teamMembersData() {
         console.log("Thank you. The team profile is generating");
         console.log(projectTitle);
         console.log(projectMembers);
+        generateHTML(projectMembers);
       }
     });
+};
+
+function generateHTML() {
+  return managerInfo((answers) => {
+    console.log("Answers: ", answers);
+  });
 }
 
-managerInfo();
+generateHTML();
