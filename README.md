@@ -20,10 +20,6 @@ For running the app => node app, For running tests => npm run test
 
 Sumit Ojha
 
-## License
-
-mit
-
 ## Tests
 
 npm run test
@@ -31,4 +27,10 @@ npm run test
 ## Questions
 
 sumit.ojha.dev@gmail.com
-sumitsann
+
+## Screenshots
+
+![](./assets/images/Screenshot_1.jpg)
+![](./assets/images/Screenshot_2.jpg)
+
+## Video Walkthrough

@@ -8,10 +8,11 @@ const generateHTML = (team) => {
     let managerHTML = `
     <div class="col-sm-4">
     <ul class="text-light bg-dark">
-      <li class="text-primary">${manager.name}</li>
-      <li class="text-secondary">${manager.id}</li>
-      <li class="text-info">${manager.email}</li>
-      <li class="text-info">${manager.phone}</li>
+      <li>🍵 Manager</li>
+      <li class="text-primary">NAME: ${manager.name}</li>
+      <li class="text-secondary">ID: ${manager.id}</li>
+      <li class="text-info">Email: <a href="mailto:${manager.email}">${manager.email}</a></li>
+      <li class="text-info">Phone: ${manager.phone}</li>
     </ul>
     </div>`;
     html.push(managerHTML);
@@ -22,10 +23,11 @@ const generateHTML = (team) => {
     let internHTML = `
     <div class="col-sm-4">
     <ul class="text-light bg-dark">
-      <li class="text-primary">${intern.name}</li>
-      <li class="text-info">${intern.id}</li>
-      <li class="text-info">${intern.email}</li>
-      <li class="text-info">${intern.school}</li>
+      <li> 🎓 Intern</li>
+      <li class="text-primary">Name: ${intern.name}</li>
+      <li class="text-info">ID: ${intern.id}</li>
+      <li class="text-info">Email: <a href="mailto:${intern.email}">${intern.email}</a></li>
+      <li class="text-info">School: ${intern.school}</li>
     </ul>
     </div>`;
     html.push(internHTML);
@@ -36,10 +38,11 @@ const generateHTML = (team) => {
     let engineerHTML = `
     <div class="col-sm-4">
     <ul class="text-light bg-dark">
-      <li class="text-primary">${engineer.name}</li>
-      <li class="text-info">${engineer.id}</li>
-      <li class="text-info">${engineer.email}</li>
-      <li class="text-info">${engineer.githubId}</li>
+      <li> ✍ Engineer</li>
+      <li class="text-primary">Name: ${engineer.name}</li>
+      <li class="text-info">ID: ${engineer.id}</li>
+      <li class="text-info">Email: <a href="mailto:${engineer.email}">${engineer.email}</a></li>
+      <li class="text-info">Github: <a href="https://www.github.com/${engineer.githubId}" target="_blank">${engineer.githubId}</a></li>
     </ul>
     </div>`;
     html.push(engineerHTML);
