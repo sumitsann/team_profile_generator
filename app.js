@@ -3,15 +3,13 @@ const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const fs = require("fs");
-const generateHTML = require("./src/htmlTemplate");
+const generateHTML = require("./src/generateHTML");
 const path = require("path");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 let projectMembers = [];
-let manager;
-let projectTitle;
 
 const getManagerInfo = () => {
   return inquirer
@@ -106,89 +104,160 @@ const promptTeamMembers = () => {
           buildTeam();
       }
     });
-      if (teamAns.employeeRole === "Intern") {
-        return inquirer
-          .prompt([
-            {
-              type: "input",
-              message: "What is the name of the intern?",
-              name: "internName",
-            },
-            {
-              type: "input",
-              message: "What is the ID of the intern?",
-              name: "internID",
-            },
-            {
-              type: "input",
-              message: "What is the email of the intern?",
-              name: "internEmail",
-            },
-            {
-              type: "input",
-              message: "What is the school of the intern?",
-              name: "internSchool",
-            },
-          ])
-          .then((internAns) => {
-            let intern = new Intern(
-              internAns.internName,
-              internAns.internID,
-              internAns.internEmail,
-              internAns.internSchool
-            );
-            projectMembers.push(intern);
+};
 
-            teamMembersData();
-          });
-      } else if (teamAns.employeeRole === "Engineer") {
-        return inquirer
-          .prompt([
-            {
-              type: "input",
-              message: "What is the name of the engineer?",
-              name: "engineerName",
-            },
-            {
-              type: "input",
-              message: "What is the ID of the intern?",
-              name: "engineerID",
-            },
-            {
-              type: "input",
-              message: "What is the email of the email?",
-              name: "engineerEmail",
-            },
-            {
-              type: "input",
-              message: "What is the github of the engineer?",
-              name: "engineerGithub",
-            },
-          ])
-          .then((engineerAns) => {
-            let engineer = new Engineer(
-              engineerAns.engineerName,
-              engineerAns.engineerID,
-              engineerAns.engineerEmail,
-              engineerAns.engineerGithub
-            );
-            projectMembers.push(engineer);
+const promptIntern = () => {
+  console.log("Adding a new intern");
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the id of the intern?",
+        name: "internID",
+        validate: (internID) => {
+          if (internID) {
+            return true;
+          } else {
+            console.log("Please enter the intern ID");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        message: "What is the name of the intern?",
+        name: "internName",
+        validate: (internName) => {
+          if (internName) {
+            return true;
+          } else {
+            console.log("Please enter a name");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        message: "What is the email of the intern?",
+        name: "internEmail",
+        validate: (internEmail) => {
+          if (internEmail) {
+            return true;
+          } else {
+            console.log("Please enter the email address");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        message: "What is the school of the intern?",
+        name: "internSchool",
+        validate: (internSchool) => {
+          if (internSchool) {
+            return true;
+          } else {
+            console.log("Please enter the school");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((answers) => {
+      console.log(answers);
+      const intern = new Intern(
+        answers.internName,
+        answers.internID,
+        answers.internEmail,
+        answers.internSchool
+      );
 
-            teamMembersData();
-          });
-      } else if (teamAns.employeeRole === "I am done") {
-        console.log("Thank you. The team profile is generating");
-        console.log(projectTitle);
-        console.log(projectMembers);
-        generateHTML(projectMembers);
-      }
+      console.log("Lets get the info about the team members now.");
+      projectMembers.push(intern);
+
+      promptTeamMembers();
     });
 };
 
-function generateHTML() {
-  return managerInfo((answers) => {
-    console.log("Answers: ", answers);
-  });
-}
+const promptEngineer = () => {
+  console.log("Adding a new engineer");
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the id of the engineer?",
+        name: "engineerID",
+        validate: (engineerID) => {
+          if (engineerID) {
+            return true;
+          } else {
+            console.log("Please enter the engineerID");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        message: "What is the name of the engineer?",
+        name: "engineerName",
+        validate: (engineerName) => {
+          if (engineerName) {
+            return true;
+          } else {
+            console.log("Please enter a name");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        message: "What is the email of the engineer?",
+        name: "engineerEmail",
+        validate: (engineerEmail) => {
+          if (engineerEmail) {
+            return true;
+          } else {
+            console.log("Please enter the email address");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        message: "What is the github of the engineer?",
+        name: "engineerGithub",
+        validate: (engineerGithub) => {
+          if (engineerGithub) {
+            return true;
+          } else {
+            console.log("Please enter the engineerGithub");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((answers) => {
+      console.log(answers);
+      const engineer = new Engineer(
+        answers.engineerName,
+        answers.engineerID,
+        answers.engineerEmail,
+        answers.engineerGithub
+      );
 
-generateHTML();
+      projectMembers.push(engineer);
+
+      promptTeamMembers();
+    });
+};
+
+const buildTeam = () => {
+  console.log("FINISHED WITH BUILDING THE TEAM");
+
+  if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdirSync(OUTPUT_DIR);
+  }
+  fs.writeFileSync(outputPath, generateHTML(projectMembers), "utf-8");
+};
+
+getManagerInfo();
